@@ -1,6 +1,6 @@
 export default {
   async up (queryInterface, Sequelize) {
-     return queryInterface.createTable('Users', {
+    return queryInterface.createTable('Users', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -24,7 +24,7 @@ export default {
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('Users');
   }
 };
