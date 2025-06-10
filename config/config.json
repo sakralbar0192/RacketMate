@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "dukhov",
+    "password": "dukhov",
+    "database": "racket_mate",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test":  {
+    "username": "dukhov",
+    "password": "dukhov",
+    "database": "racket_mate",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "dukhov",
+    "password": "dukhov",
+    "database": "racket_mate",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
