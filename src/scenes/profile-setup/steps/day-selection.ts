@@ -1,58 +1,37 @@
-import { Markup } from 'telegraf';
-import { type ProfileSetupWizardContext } from '../index.ts';
+import { Markup } from 'telegraf'
+import { type ProfileSetupWizardContext } from '../index.ts'
+import { BaseStep } from '../../base-step.ts'
+import type { dayKey } from '../service/week-day.ts'
+import WeekDayService from '../service/week-day.ts'
 
-export class DaySelectionStep {
-  static async execute(ctx: ProfileSetupWizardContext) {
-    const state = ctx.wizard.state;
-    
-    if (!state.selectedDays) {
-      state.selectedDays = [];
+export class DaySelectionStep extends BaseStep {
+  async execute(ctx: ProfileSetupWizardContext) {
+    if (!ctx.wizard.state.selectedDays) {
+      ctx.wizard.state.selectedDays = []
     }
-
-    await ctx.reply(
+    const selectedDays = ctx.wizard.state.selectedDays
+    await ctx[this.replyMethod](
       '📅 Выберите дни для игры (можно несколько):',
-      Markup.inlineKeyboard([
-        [
-          Markup.button.callback(ctx.wizard.state.selectedDays?.includes('Пн') ? '✅ Пн' : 'Пн', 'day_mon'),
-          Markup.button.callback(ctx.wizard.state.selectedDays?.includes('Вт') ? '✅ Вт' : 'Вт', 'day_tue'),
-        ],
-        [
-          Markup.button.callback(ctx.wizard.state.selectedDays?.includes('Ср') ? '✅ Ср' : 'Ср', 'day_wed'),
-          Markup.button.callback(ctx.wizard.state.selectedDays?.includes('Чт') ? '✅ Чт' : 'Чт', 'day_thu'),
-        ],
-        [
-          Markup.button.callback(ctx.wizard.state.selectedDays?.includes('Пт') ? '✅ Пт' : 'Пт', 'day_fri'),
-          Markup.button.callback(ctx.wizard.state.selectedDays?.includes('Сб') ? '✅ Сб' : 'Сб', 'day_sat'),
-        ],
-        [Markup.button.callback(ctx.wizard.state.selectedDays?.includes('Вс') ? '✅ Вс' : 'Вс', 'day_sun')],
-        [Markup.button.callback('Готово', 'days_done')],
-      ])
-    );
+      Markup.inlineKeyboard(WeekDayService.getDaysKeyboard(selectedDays as dayKey[]))
+    )
   }
 
-  static async handleInput(ctx: ProfileSetupWizardContext, action: string) {
-    const state = ctx.wizard.state;
-    const dayMap: Record<string, string> = {
-      'day_mon': 'Пн', 'day_tue': 'Вт', /* ... */
-    };
+  async handleInput(ctx: ProfileSetupWizardContext, action: dayKey | 'days_done') {
+    let selectedDays = ctx.wizard.state.selectedDays as dayKey[]
 
     if (action === 'days_done') {
-      if (state.selectedDays?.length === 0) {
-        await ctx.answerCbQuery('Выберите хотя бы один день!');
-        return false;
-      }
-      return true; // Переход к следующему шагу
-    }
-
-    const day = dayMap[action];
-    if (day) {
-      if (state.selectedDays?.includes(day)) {
-        state.selectedDays = state.selectedDays.filter((d: string) => d !== day);
+      if (!selectedDays?.length) {
+        await ctx.answerCbQuery('Выберите хотя бы один день!')
+      } else return true // Переход к следующему шагу
+    } else {
+      if (selectedDays?.includes(action)) {
+        selectedDays = selectedDays.filter(d => d !== action)
       } else {
-        state.selectedDays?.push(day);
+        selectedDays?.push(action)
       }
-      await this.execute(ctx); // Обновляем интерфейс
+      ctx.wizard.state.selectedDays = selectedDays
+      this.isRedraw = true
+      return await this.execute(ctx) // Обновляем интерфейс
     }
-    return false;
   }
 }
