@@ -11,7 +11,7 @@ export class AgeSelectionStep extends BaseStep {
     }
 
     await ctx[this.replyMethod](
-      '🎾 Выберите предпочтительный возраст оппонентов',
+      '🧓 Выберите предпочтительный возраст оппонентов',
       Markup.inlineKeyboard(PreferredAgeService.getAgesKeyboard(ctx.wizard.state?.preferAges as ageCategoryKey[]))
     )
   }

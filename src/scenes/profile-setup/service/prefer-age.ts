@@ -10,15 +10,15 @@ export interface ageCategoryInfo {
 export default class PreferredAgeService {
   static preferredAges: Record<ageCategoryKey, ageCategoryInfo> = {
     before_twenty: {
-      name: 'До двадцати',
+      name: 'до двадцати',
       shortName: '< 20',
     },
     after_twenty_before_thirty: {
-      name: 'От двадцати до тридцати',
+      name: 'от двадцати до тридцати',
       shortName: '20 – 30',
     },
     after_thirty: {
-      name: 'После тридцати',
+      name: 'после тридцати',
       shortName: '30 <',
     },
   }
@@ -49,5 +49,13 @@ export default class PreferredAgeService {
 
   static isPreferredAgeValid(preferredAge: string) {
     return PreferredAgeService.preferredAgeKeys.includes(preferredAge as ageCategoryKey)
+  }
+
+  static getReadablePreferredAgeInfo(ageCategoryKeys: (ageCategoryKey | 'all')[]) {
+    if (ageCategoryKeys.includes('all')) return 'Любой'
+    else return ageCategoryKeys
+      .filter(age => age !== 'all')
+      .map(age => PreferredAgeService.preferredAges[age].name)
+      .join(' и ')
   }
 }

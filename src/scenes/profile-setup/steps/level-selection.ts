@@ -25,11 +25,6 @@ export class LevelSelectionStep extends BaseStep {
     if (PlayLevelService.isLevelValid(action)) {
       ctx.wizard.state.level = action as playLevel
       return true
-    } else {
-      this.isRedraw = true
-      await ctx.answerCbQuery('Неподходящее значение для уровня!')
-      return await this.execute(ctx) // Обновляем интерфейс
-    }
-
+    } else  ctx.answerCbQuery('Неподходящее значение для уровня!')
   }
 }

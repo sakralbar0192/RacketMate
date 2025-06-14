@@ -11,7 +11,7 @@ export class GenderSelectionStep extends BaseStep {
     }
 
     await ctx[this.replyMethod](
-      '🎾 Выберите предпочтительный пол оппонентов',
+      '🧑🤝👧 Выберите предпочтительный пол оппонентов',
       Markup.inlineKeyboard(PreferredGenderService.getGendersKeyboard(ctx.wizard.state?.preferGenders as genderKey[]))
     )
   }

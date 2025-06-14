@@ -29,7 +29,7 @@ export class TimeSelectionStep extends BaseStep {
       this.currentDay = currentDay
 
       await ctx[this.replyMethod](
-        `📅 ${WeekDayService.daysOfWeek[currentDay].name} - выберите время для игры  (можно несколько):`,
+        `⏰ ${WeekDayService.daysOfWeek[currentDay].name} - выберите время для игры  (можно несколько):`,
         Markup.inlineKeyboard(DayTimeService.getDaysKeyboard(dayTimes[currentDay] as timeKey[]))
       )
     }

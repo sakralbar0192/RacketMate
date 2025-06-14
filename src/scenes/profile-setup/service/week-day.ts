@@ -10,31 +10,31 @@ export interface dayInfo {
 export default class WeekDayService {
   static daysOfWeek: Record<dayKey, dayInfo> = {
     'day_mon': {
-      name: 'Понедельник',
+      name: 'понедельник',
       shortName: 'Пн'
     },
     'day_tue': {
-      name: 'Вторник',
+      name: 'вторник',
       shortName: 'Вт'
     },
     'day_wed': {
-      name: 'Среда',
+      name: 'среда',
       shortName: 'Ср'
     },
     'day_thu': {
-      name: 'Четверг',
+      name: 'четверг',
       shortName: 'Чт'
     },
     'day_fri': {
-      name: 'Пятница',
+      name: 'пятница',
       shortName: 'Пт'
     },
     'day_sat': {
-      name: 'Суббота',
+      name: 'суббота',
       shortName: 'Сб'
     },
     'day_sun': {
-      name: 'Воскресенье',
+      name: 'воскресенье',
       shortName: 'Вс'
     }
   }
@@ -63,5 +63,9 @@ export default class WeekDayService {
     // Добавляем кнопку "Готово"
     daysKeyboard.push([ Markup.button.callback('Готово', 'days_done') ])
     return daysKeyboard
+  }
+
+  static getReadableWeekDayInfo(selectedDays: dayKey[]) {
+    return selectedDays.map(day => WeekDayService.daysOfWeek[day].name).join(', ')
   }
 }

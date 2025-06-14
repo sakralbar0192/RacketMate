@@ -1,4 +1,6 @@
 import { Markup } from 'telegraf'
+import type { dayKey } from './week-day.ts'
+import WeekDayService from './week-day.ts'
 
 export type timeKey = 'time_nine_am' | 'time_ten_am' | 'time_eleven_am' | 'time_twelve_am' | 'time_thirteen_pm' | 'time_fourteen_pm' | 'time_fifteen_pm' | 'time_sixteen_pm' | 'time_seventeen_pm' | 'time_eighteen_pm' | 'time_nineteen_pm' | 'time_twenty_pm'
 
@@ -38,5 +40,12 @@ export default class DayTimeService {
     // Добавляем кнопку "Готово"
     daysKeyboard.push([ Markup.button.callback('Готово', 'times_done') ])
     return daysKeyboard
+  }
+
+  static getReadableDayTimeInfo(dayTimes: Record<dayKey, timeKey[]>) {
+    return '\n' + Object.entries(dayTimes).map(([ day, dayTimes ]) => {
+      return `  ${WeekDayService.daysOfWeek[day as dayKey].name}: \n` +
+      `    ${dayTimes.map(dayTime => DayTimeService.timeOfDay[dayTime]).join(', ')}`
+    }).join('\n')
   }
 }

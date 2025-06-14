@@ -3,9 +3,9 @@ export type playLevel = 'beginner' | 'amateur' | 'pro'
 export default class PlayLevelService {
 
   static playLevels: Record<playLevel, string> = {
-    beginner: 'Новичок',
-    amateur: 'Любитель',
-    pro: 'Профессионал',
+    beginner: 'новичок',
+    amateur: 'любитель',
+    pro: 'профессионал',
   }
 
   static get defaultLevel() {
@@ -22,5 +22,9 @@ export default class PlayLevelService {
 
   static isLevelValid(level: string) {
     return PlayLevelService.playLevelKeys.includes(level as playLevel)
+  }
+
+  static getReadableLevelInfo(level: playLevel) {
+    return PlayLevelService.playLevels[level]
   }
 }

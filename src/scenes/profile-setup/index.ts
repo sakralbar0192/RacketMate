@@ -9,6 +9,12 @@ import type { ageCategoryKey } from './service/prefer-age.ts'
 import { AgeSelectionStep } from './steps/age-selection.ts'
 import type { genderKey } from './service/prefer-gender.ts'
 import { GenderSelectionStep } from './steps/gender-selection.ts'
+import type { playLevel } from './service/play-level.ts'
+import PlayLevelService from './service/play-level.ts'
+import WeekDayService from './service/week-day.ts'
+import DayTimeService from './service/day-time.ts'
+import PreferredAgeService from './service/prefer-age.ts'
+import PreferredGenderService from './service/prefer-gender.ts'
 
 // 1. Типизируем состояние сцены
 interface WizardState {
@@ -95,13 +101,14 @@ export default new WizardScene<ProfileSetupWizardContext>(
       )
 
       if (shouldProceed) {
+        console.log(ctx.wizard.state.dayTimes)
         await ctx.reply(
           '✅ Профиль настроен!\n\n' +
-          `Уровень: ${ctx.wizard.state.level}\n` +
-          `Дни: ${ctx.wizard.state.selectedDays?.join(', ')}\n` +
-          `Время: ${Object.entries(ctx.wizard.state.dayTimes || {}).map(([ day, times ]) => `${day}: ${times.join(', ')}`).join('\n')}\n` +
-          `Возраст: ${ctx.wizard.state.preferAges?.join(', ')}\n` +
-          `Пол: ${ctx.wizard.state.preferGenders?.join(', ')}\n`
+          `Уровень: ${PlayLevelService.getReadableLevelInfo(ctx.wizard.state.level as playLevel)}\n` +
+          `Дни: ${WeekDayService.getReadableWeekDayInfo(ctx.wizard.state.selectedDays as dayKey[])}\n` +
+          `Время: ${DayTimeService.getReadableDayTimeInfo(ctx.wizard.state.dayTimes as Record<dayKey, timeKey[]>)}\n` +
+          `Предпочтительный возраст: ${PreferredAgeService.getReadablePreferredAgeInfo(ctx.wizard.state.preferAges as ageCategoryKey[])}\n` +
+          `Предпочтительный пол: ${PreferredGenderService.getReadablePreferredGenderInfo(ctx.wizard.state.preferGenders as genderKey[])}\n`
         )
         return ctx.scene.leave()
       }

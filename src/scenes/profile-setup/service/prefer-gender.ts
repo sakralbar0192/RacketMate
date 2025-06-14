@@ -10,11 +10,11 @@ export interface genderInfo {
 export default class PreferredGenderService {
   static preferredGenders: Record<genderKey, genderInfo> = {
     women: {
-      name: 'Женщины',
+      name: 'женщины',
       shortName: '♀️',
     },
     men: {
-      name: 'Мужчины',
+      name: 'мужчины',
       shortName: '♂️',
     },
   }
@@ -45,5 +45,10 @@ export default class PreferredGenderService {
 
   static isPreferredAgeValid(preferredGender: string) {
     return PreferredGenderService.preferredGenderKeys.includes(preferredGender as genderKey)
+  }
+
+  static getReadablePreferredGenderInfo(preferredGenders: (genderKey | 'all')[]) {
+    if (preferredGenders.includes('all')) return 'любой'
+    else return preferredGenders.filter(gender => gender !== 'all').map(gender => PreferredGenderService.preferredGenders[gender].name).join('и ')
   }
 }
