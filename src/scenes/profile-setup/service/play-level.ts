@@ -1,8 +1,9 @@
-export type playLevel = 'beginner' | 'amateur' | 'pro'
+import type { PlayLevel, PlayLevelStepName } from '../types.ts'
 
 export default class PlayLevelService {
+  static playLevelStepName: PlayLevelStepName = 'play-level'
 
-  static playLevels: Record<playLevel, string> = {
+  static playLevels: Record<PlayLevel, string> = {
     beginner: 'новичок',
     amateur: 'любитель',
     pro: 'профессионал',
@@ -13,18 +14,18 @@ export default class PlayLevelService {
   }
 
   static get playLevelKeys() {
-    return Object.keys(PlayLevelService.playLevels) as playLevel[]
+    return Object.keys(PlayLevelService.playLevels) as PlayLevel[]
   }
 
   static get playLevelEntries() {
-    return Object.entries(PlayLevelService.playLevels) as [playLevel, string][]
+    return Object.entries(PlayLevelService.playLevels) as [PlayLevel, string][]
   }
 
   static isLevelValid(level: string) {
-    return PlayLevelService.playLevelKeys.includes(level as playLevel)
+    return PlayLevelService.playLevelKeys.includes(level as PlayLevel)
   }
 
-  static getReadableLevelInfo(level: playLevel) {
+  static getReadableLevelInfo(level: PlayLevel) {
     return PlayLevelService.playLevels[level]
   }
 }

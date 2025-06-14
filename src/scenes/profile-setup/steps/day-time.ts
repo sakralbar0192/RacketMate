@@ -1,44 +1,42 @@
 import { Markup } from 'telegraf'
-import { type ProfileSetupWizardContext } from '../index.ts'
-import type { dayKey } from '../service/week-day.ts'
-import type { timeKey } from '../service/day-time.ts'
 import { BaseStep } from '../../base-step.ts'
 import DayTimeService from '../service/day-time.ts'
 import WeekDayService from '../service/week-day.ts'
+import type { ProfileSetupWizardContext as Context, DayTime, DayTimeAction, WeekDay } from '../types.ts'
 
-export class TimeSelectionStep extends BaseStep {
-  currentDay: dayKey | null = null
+export class DayTimeStep extends BaseStep {
+  isRedraw = true
+  currentDay: WeekDay | null = null
 
-  defineCurrentDay(selectedDays: dayKey[] = [], dayTimes: Record<dayKey, timeKey[]>, reset = false) {
+  defineCurrentDay(selectedDays: WeekDay[] = [], dayTimes: Record<WeekDay, DayTime[]>, reset = false) {
     if (reset) this.currentDay = null
     return this.currentDay || selectedDays.find(day => !dayTimes[day]?.length)
   }
 
-  async execute(ctx: ProfileSetupWizardContext) {
+  async execute(ctx: Context) {
     if (!ctx.wizard.state.dayTimes) {
       ctx.wizard.state.dayTimes = {}
     }
-    const selectedDays: dayKey[] = ctx.wizard.state.selectedDays || []
-    const dayTimes = ctx.wizard.state.dayTimes as Record<dayKey, timeKey[]>
-    const currentDay: dayKey | undefined = this.defineCurrentDay(selectedDays, dayTimes)
+    const selectedDays: WeekDay[] = ctx.wizard.state.selectedDays || []
+    const dayTimes = ctx.wizard.state.dayTimes as Record<WeekDay, DayTime[]>
+    const currentDay: WeekDay | undefined = this.defineCurrentDay(selectedDays, dayTimes)
 
     if (!currentDay) {
       await ctx.answerCbQuery('Выберите хотя бы один день!')
       ctx.wizard.back()
     } else {
       this.currentDay = currentDay
-
       await ctx[this.replyMethod](
         `⏰ ${WeekDayService.daysOfWeek[currentDay].name} - выберите время для игры  (можно несколько):`,
-        Markup.inlineKeyboard(DayTimeService.getDaysKeyboard(dayTimes[currentDay] as timeKey[]))
+        Markup.inlineKeyboard(DayTimeService.getDaysKeyboard(dayTimes[currentDay] as DayTime[]))
       )
     }
   }
 
-  async handleInput(ctx: ProfileSetupWizardContext, action: timeKey | 'times_done') {
-    const dayTimes = ctx.wizard.state.dayTimes as Record<dayKey, timeKey[]>
-    const selectedDays: dayKey[] = ctx.wizard.state.selectedDays || []
-    let  currentDay: dayKey | undefined = this.defineCurrentDay(selectedDays, dayTimes)
+  async handleInput(ctx: Context, action: DayTimeAction) {
+    const dayTimes = ctx.wizard.state.dayTimes as Record<WeekDay, DayTime[]>
+    const selectedDays: WeekDay[] = ctx.wizard.state.selectedDays || []
+    let  currentDay: WeekDay | undefined = this.defineCurrentDay(selectedDays, dayTimes)
     if (!currentDay) {
       await ctx.answerCbQuery('Выберите хотя бы один день!')
       ctx.wizard.back()
@@ -46,7 +44,7 @@ export class TimeSelectionStep extends BaseStep {
 
       if (!dayTimes[currentDay]) dayTimes[currentDay] = []
 
-      if (action === 'times_done') {
+      if (action === 'day-time_done') {
         if (!dayTimes[currentDay]?.length) {
           await ctx.answerCbQuery('Выберите подходящее время!')
         } else {
@@ -57,14 +55,15 @@ export class TimeSelectionStep extends BaseStep {
           } else return true
         }
       } else {
-        if (dayTimes[currentDay]?.includes(action)) {
-          dayTimes[currentDay] = dayTimes[currentDay].filter(d => d !== action)
+        const dayTime = this.getDataFromAction(action) as DayTime
+        if (dayTimes[currentDay]?.includes(dayTime)) {
+          dayTimes[currentDay] = dayTimes[currentDay].filter(time => time !== dayTime)
         } else {
-          dayTimes[currentDay]?.push(action)
+          dayTimes[currentDay]?.push(dayTime)
         }
         ctx.wizard.state.dayTimes = dayTimes
         this.isRedraw = true
-        this.execute(ctx) // Обновляем интерфейс
+        this.execute(ctx)
       }
     }
   }

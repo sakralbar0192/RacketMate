@@ -1,50 +1,51 @@
 import { Markup } from 'telegraf'
-import type { dayKey } from './week-day.ts'
 import WeekDayService from './week-day.ts'
-
-export type timeKey = 'time_nine_am' | 'time_ten_am' | 'time_eleven_am' | 'time_twelve_am' | 'time_thirteen_pm' | 'time_fourteen_pm' | 'time_fifteen_pm' | 'time_sixteen_pm' | 'time_seventeen_pm' | 'time_eighteen_pm' | 'time_nineteen_pm' | 'time_twenty_pm'
+import type { DayTime, DayTimeAction, DayTimeStepName, WeekDay } from '../types.ts'
+import turnDataIntoAction from '../../../utils/turn-data-into-action.ts'
 
 export default class DayTimeService {
-  static timeOfDay: Record<timeKey, string> = {
-    'time_nine_am': '09:00',
-    'time_ten_am': '10:00',
-    'time_eleven_am': '11:00',
-    'time_twelve_am': '12:00',
-    'time_thirteen_pm': '13:00',
-    'time_fourteen_pm': '14:00',
-    'time_fifteen_pm': '15:00',
-    'time_sixteen_pm': '16:00',
-    'time_seventeen_pm': '17:00',
-    'time_eighteen_pm': '18:00',
-    'time_nineteen_pm': '19:00',
-    'time_twenty_pm': '20:00',
+  static DayTimeStepName: DayTimeStepName = 'day-time'
+
+  static timeOfDay: Record<DayTime, string> = {
+    'nine-am': '09:00',
+    'ten-am': '10:00',
+    'eleven-am': '11:00',
+    'twelve-am': '12:00',
+    'thirteen-pm': '13:00',
+    'fourteen-pm': '14:00',
+    'fifteen-pm': '15:00',
+    'sixteen-pm': '16:00',
+    'seventeen-pm': '17:00',
+    'eighteen-pm': '18:00',
+    'nineteen-pm': '19:00',
+    'twenty-pm': '20:00',
   }
 
-  static getDaysKeyboard(selectedTimes: timeKey[] = []) {
-    const keyboardStructure: timeKey[][] = [
-      [ 'time_nine_am', 'time_ten_am', 'time_eleven_am' ],
-      [ 'time_twelve_am', 'time_thirteen_pm', 'time_fourteen_pm' ],
-      [ 'time_fifteen_pm', 'time_sixteen_pm', 'time_seventeen_pm' ],
-      [ 'time_eighteen_pm', 'time_nineteen_pm', 'time_twenty_pm' ],
+  static getDaysKeyboard(selectedTimes: DayTime[] = []) {
+    const keyboardStructure: DayTime[][] = [
+      [ 'nine-am', 'ten-am', 'eleven-am' ],
+      [ 'twelve-am', 'thirteen-pm', 'fourteen-pm' ],
+      [ 'fifteen-pm', 'sixteen-pm', 'seventeen-pm' ],
+      [ 'eighteen-pm', 'nineteen-pm', 'twenty-pm' ],
     ]
 
-    function createTimeButton(timeKey: timeKey): [string, timeKey] {
-      const label = `${selectedTimes.includes(timeKey) ? '✅' : ''} ${DayTimeService.timeOfDay[timeKey]}`
-      return [ label, timeKey ]
+    function createTimeButton(dayTime: DayTime): [string, DayTimeAction] {
+      const label = `${selectedTimes.includes(dayTime) ? '✅' : ''} ${DayTimeService.timeOfDay[dayTime]}`
+      return [ label, turnDataIntoAction(dayTime, DayTimeService.DayTimeStepName) as DayTimeAction ]
     }
 
     const daysKeyboard = keyboardStructure.map(row =>
-      row.map(timeKey => Markup.button.callback(...createTimeButton(timeKey)))
+      row.map(dayTime => Markup.button.callback(...createTimeButton(dayTime)))
     )
 
     // Добавляем кнопку "Готово"
-    daysKeyboard.push([ Markup.button.callback('Готово', 'times_done') ])
+    daysKeyboard.push([ Markup.button.callback('Готово', 'day-time_done') ])
     return daysKeyboard
   }
 
-  static getReadableDayTimeInfo(dayTimes: Record<dayKey, timeKey[]>) {
+  static getReadableDayTimeInfo(dayTimes: Record<WeekDay, DayTime[]>) {
     return '\n' + Object.entries(dayTimes).map(([ day, dayTimes ]) => {
-      return `  ${WeekDayService.daysOfWeek[day as dayKey].name}: \n` +
+      return `  ${WeekDayService.daysOfWeek[day as WeekDay].name}: \n` +
       `    ${dayTimes.map(dayTime => DayTimeService.timeOfDay[dayTime]).join(', ')}`
     }).join('\n')
   }

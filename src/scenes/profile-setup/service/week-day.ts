@@ -1,71 +1,64 @@
 import { Markup } from 'telegraf'
-
-export type dayKey = 'day_mon' | 'day_tue' | 'day_wed' | 'day_thu' | 'day_fri' | 'day_sat' | 'day_sun'
-
-export interface dayInfo {
-  name: string,
-  shortName: string
-}
+import type { WeekDay, WeekDayAction, WeekDayStepName } from '../types.ts'
+import type { EntityInfo } from '../../types.ts'
+import turnDataIntoAction from '../../../utils/turn-data-into-action.ts'
 
 export default class WeekDayService {
-  static daysOfWeek: Record<dayKey, dayInfo> = {
-    'day_mon': {
+  static WeekDayStepName: WeekDayStepName = 'week-day'
+
+  static daysOfWeek: Record<WeekDay, EntityInfo> = {
+    'monday': {
       name: 'понедельник',
       shortName: 'Пн'
     },
-    'day_tue': {
+    'tuesday': {
       name: 'вторник',
       shortName: 'Вт'
     },
-    'day_wed': {
+    'wednesday': {
       name: 'среда',
       shortName: 'Ср'
     },
-    'day_thu': {
+    'thursday': {
       name: 'четверг',
       shortName: 'Чт'
     },
-    'day_fri': {
+    'friday': {
       name: 'пятница',
       shortName: 'Пт'
     },
-    'day_sat': {
+    'saturday': {
       name: 'суббота',
       shortName: 'Сб'
     },
-    'day_sun': {
+    'sunday': {
       name: 'воскресенье',
       shortName: 'Вс'
     }
   }
 
-  static getDaysKeyboard(selectedDays: dayKey[] = []) {
-    const keyboardStructure: dayKey[][] = [
-      // Первая строка: Пн-Вт
-      [ 'day_mon', 'day_tue' ],
-      // Вторая строка: Ср-Чт
-      [ 'day_wed', 'day_thu' ],
-      // Третья строка: Пт-Сб
-      [ 'day_fri', 'day_sat' ],
-      // Четвертая строка: Вс
-      [ 'day_sun' ]
+  static getDaysKeyboard(selectedDays: WeekDay[] = []) {
+    const keyboardStructure: WeekDay[][] = [
+      [ 'monday', 'tuesday' ],
+      [ 'wednesday', 'thursday' ],
+      [ 'friday', 'saturday' ],
+      [ 'sunday' ]
     ]
 
-    function createDayButton(dayKey: dayKey): [string, dayKey] {
-      const label = `${selectedDays.includes(dayKey) ? '✅' : ''} ${WeekDayService.daysOfWeek[dayKey].shortName}`
-      return [ label, dayKey ]
+    function createDayButton(weekDay: WeekDay): [string, WeekDayAction] {
+      const label = `${selectedDays.includes(weekDay) ? '✅' : ''} ${WeekDayService.daysOfWeek[weekDay].shortName}`
+      return [ label,  turnDataIntoAction(weekDay, WeekDayService.WeekDayStepName) as WeekDayAction ]
     }
 
     const daysKeyboard = keyboardStructure.map(row =>
-      row.map(dayKey => Markup.button.callback(...createDayButton(dayKey)))
+      row.map(weekDay => Markup.button.callback(...createDayButton(weekDay)))
     )
 
-    // Добавляем кнопку "Готово"
-    daysKeyboard.push([ Markup.button.callback('Готово', 'days_done') ])
+    daysKeyboard.push([ Markup.button.callback('Готово', 'week-day_done') ])
     return daysKeyboard
   }
 
-  static getReadableWeekDayInfo(selectedDays: dayKey[]) {
-    return selectedDays.map(day => WeekDayService.daysOfWeek[day].name).join(', ')
+  static getReadableWeekDayInfo(selectedDays: WeekDay[]) {
+    return selectedDays.map(weekDay => WeekDayService.daysOfWeek[weekDay].name).join(', ')
   }
 }

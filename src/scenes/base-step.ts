@@ -1,4 +1,5 @@
 import { type WizardContext, type WizardSessionData } from 'telegraf/scenes'
+import getDataFromAction from '../utils/get-data-from-action.ts'
 
 type replyMethod = 'editMessageText' | 'reply'
 
@@ -12,4 +13,5 @@ export abstract class BaseStep {
   get replyMethod(): replyMethod {
     return this.isRedraw ? 'editMessageText' : 'reply'
   }
+  getDataFromAction = getDataFromAction
 }
