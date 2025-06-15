@@ -1,17 +1,23 @@
 import { StepFactory } from '../../step-factory.ts'
 import DayTimeService from '../service/day-time.ts'
 import PlayLevelService from '../service/play-level.ts'
+import PlayerAgeService from '../service/player-age.ts'
+import PlayerGenderService from '../service/player-gender.ts'
 import PreferredAgeService from '../service/prefer-age.ts'
 import PreferredGenderService from '../service/prefer-gender.ts'
 import WeekDayService from '../service/week-day.ts'
-import type { DayTime, DayTimeAction, PlayLevel, PlayLevelAction, PreferredAge, PreferredAgeAction, PreferredGender, PreferredGenderAction, ProfileSetupActions, ProfileSetupWizardContext, StepKey, WeekDay, WeekDayAction } from '../types.ts'
+import type { DayTime, DayTimeAction, PlayerAgeAction, PlayerGenderAction, PlayLevel, PlayLevelAction, PreferredAge, PreferredAgeAction, PreferredGender, PreferredGenderAction, ProfileSetupActions, ProfileSetupWizardContext, StepKey, WeekDay, WeekDayAction } from '../types.ts'
 import { DayTimeStep } from './day-time.ts'
 import { PlayLevelStep } from './play-level.ts'
+import { PlayerAgeStep } from './player-age.ts'
+import { PlayerGenderStep } from './player-gender.ts'
 import { PreferredAgeStep } from './preferred-age.ts'
 import { PreferredGenderStep } from './preferred-gender.ts'
 import { WeekDayStep } from './week-day.ts'
 
 const playLevelStep = new PlayLevelStep()
+const playerAgeStep = new PlayerAgeStep()
+const playerGenderStep = new PlayerGenderStep()
 const weekDayStep = new WeekDayStep()
 const dayTimeStep = new DayTimeStep()
 const preferredAgeStep = new PreferredAgeStep()
@@ -24,6 +30,20 @@ export const profileSetupStepFactory = new StepFactory<StepKey, ProfileSetupActi
       step: {
         execute: (ctx) => playLevelStep.execute(ctx),
         handleInput: (ctx, action: Extract<ProfileSetupActions, PlayLevelAction>) => playLevelStep.handleInput(ctx, action)
+      }
+    },
+    {
+      name: PlayerAgeService.playerAgeStepName,
+      step: {
+        execute: (ctx) => playerAgeStep.execute(ctx),
+        handleInput: (ctx, action: Extract<ProfileSetupActions, PlayerAgeAction>) => playerAgeStep.handleInput(ctx, action)
+      }
+    },
+    {
+      name: PlayerGenderService.playerGenderStepName,
+      step: {
+        execute: (ctx) => playerGenderStep.execute(ctx),
+        handleInput: (ctx, action: Extract<ProfileSetupActions, PlayerGenderAction>) => playerGenderStep.handleInput(ctx, action)
       }
     },
     {
