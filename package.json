@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bunx nodemon",
-    "db:migrate": "sequelize db:migrate",
+    "dev": "bun --watch ./src/index.ts",
+    "db:migrate": "sequelize db:migrate --config ./db/config/config.json --migrations-path ./db/migrations",
     "db:migrate:undo": "sequelize db:migrate:undo",
     "db:seed": "sequelize db:seed",
     "db:seed:undo": "sequelize db:seed:undo",
@@ -22,15 +22,12 @@
     "eslint": "^9.28.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^7.2.1",
     "globals": "^16.2.0",
-    "nodemon": "^3.1.10",
     "pg": "^8.16.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.3",
-    "ts-node": "^10.9.2",
     "typescript-eslint": "^8.34.0"
   },
   "peerDependencies": {

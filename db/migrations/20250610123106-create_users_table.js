@@ -22,9 +22,9 @@ export default {
         type: Sequelize.DATE,
         allowNull: false
       }
-    });
+    })
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('Users')
   }
-};
+}

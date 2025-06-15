@@ -1,7 +1,7 @@
 import { Markup, Scenes, session, Telegraf } from 'telegraf'
-import User from './db/models/User.ts'
 import profileSetup from './scenes/profile-setup/index.ts'
 import { type botContext } from './types/context.ts'
+import User from '../db/models/User.ts'
 
 //TODO Реализовать /help
 // bot.help((ctx) => ctx.reply('Send me a sticker'))
