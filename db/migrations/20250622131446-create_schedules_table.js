@@ -1,6 +1,6 @@
 export default {
   async up (queryInterface, Sequelize) {
-    return queryInterface.createTable('Availability', {
+    return queryInterface.createTable('Schedules', {
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -33,6 +33,14 @@ export default {
       sunday: {
         type: Sequelize.STRING,
         allowNull: true
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false
       },
     })
   },

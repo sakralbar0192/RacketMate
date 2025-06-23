@@ -21,7 +21,7 @@ services:
       - POSTGRES_PASSWORD=dukhov
       - POSTGRES_DB=racket_mate
     ports:
-    - 5432:5432
+    - 5434:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/00-init.sql

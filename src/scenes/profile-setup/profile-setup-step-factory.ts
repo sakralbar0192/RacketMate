@@ -1,5 +1,5 @@
-// import Availability from '../../../db/models/Availability.ts'
-// import Profile from '../../../db/models/Profile.ts'
+import Schedule from '../../../db/models/Schedule.ts'
+import Profile from '../../../db/models/Profile.ts'
 import User from '../../../db/models/User.ts'
 import { StepFactory } from '../step-factory.ts'
 import DayTimeService from './service/day-time.ts'
@@ -98,52 +98,52 @@ export const profileSetupStepFactory = new StepFactory<StepKey, ProfileSetupActi
         })
       }
 
-      console.log('User Save finished', currentUser)
+      console.log('User Save finished')
 
-      // let currentProfile = await Profile.findByPk(ctx.from?.id)
+      let currentProfile = await Profile.findByPk(ctx.from?.id)
 
-      // if (currentProfile) {
-      //   await currentProfile.update({
-      //     gender: ctx.wizard.state.gender,
-      //     age: ctx.wizard.state.age
-      //   })
-      // } else {
-      //   currentProfile = await Profile.create({
-      //     user_id: ctx.from?.id || '',
-      //     preferred_genders: ctx.wizard.state.preferGenders,
-      //     preferred_ages: ctx.wizard.state.preferGenders,
-      //     play_level: ctx.wizard.state.level,
-      //   })
-      // }
+      if (currentProfile) {
+        await currentProfile.update({
+          gender: ctx.wizard.state.gender,
+          age: ctx.wizard.state.age
+        })
+      } else {
+        currentProfile = await Profile.create({
+          user_id: ctx.from?.id || '',
+          preferred_genders: ctx.wizard.state.preferGenders?.join(', '),
+          preferred_ages: ctx.wizard.state.preferAges?.join(', '),
+          play_level: ctx.wizard.state.level,
+        })
+      }
 
-      // console.log('Profile Save finished', currentProfile)
+      console.log('Profile Save finished')
 
-      // let currentAvailability = await Availability.findByPk(ctx.from?.id)
+      let currentSchedule = await Schedule.findByPk(ctx.from?.id)
 
-      // if (currentAvailability) {
-      //   await currentAvailability.update({
-      //     monday: ctx.wizard.state.dayTimes?.monday.join(', ') || '',
-      //     tuesday: ctx.wizard.state.dayTimes?.tuesday.join(', ') || '',
-      //     wednesday: ctx.wizard.state.dayTimes?.wednesday.join(', ') || '',
-      //     thursday: ctx.wizard.state.dayTimes?.thursday.join(', ') || '',
-      //     friday: ctx.wizard.state.dayTimes?.friday.join(', ') || '',
-      //     saturday: ctx.wizard.state.dayTimes?.saturday.join(', ') || '',
-      //     sunday: ctx.wizard.state.dayTimes?.sunday.join(', ') || '',
-      //   })
-      // } else {
-      //   currentAvailability = await Profile.create({
-      //     user_id: ctx.from?.id || '',
-      //     monday: ctx.wizard.state.dayTimes?.monday.join(', ') || '',
-      //     tuesday: ctx.wizard.state.dayTimes?.tuesday.join(', ') || '',
-      //     wednesday: ctx.wizard.state.dayTimes?.wednesday.join(', ') || '',
-      //     thursday: ctx.wizard.state.dayTimes?.thursday.join(', ') || '',
-      //     friday: ctx.wizard.state.dayTimes?.friday.join(', ') || '',
-      //     saturday: ctx.wizard.state.dayTimes?.saturday.join(', ') || '',
-      //     sunday: ctx.wizard.state.dayTimes?.sunday.join(', ') || '',
-      //   })
-      // }
+      if (currentSchedule) {
+        await currentSchedule.update({
+          monday: ctx.wizard.state.dayTimes?.monday.join(', ') || '',
+          tuesday: ctx.wizard.state.dayTimes?.tuesday.join(', ') || '',
+          wednesday: ctx.wizard.state.dayTimes?.wednesday.join(', ') || '',
+          thursday: ctx.wizard.state.dayTimes?.thursday.join(', ') || '',
+          friday: ctx.wizard.state.dayTimes?.friday.join(', ') || '',
+          saturday: ctx.wizard.state.dayTimes?.saturday.join(', ') || '',
+          sunday: ctx.wizard.state.dayTimes?.sunday.join(', ') || '',
+        })
+      } else {
+        currentSchedule = await Schedule.create({
+          user_id: ctx.from?.id || '',
+          monday: (ctx.wizard.state.dayTimes?.monday || []).join(', ') || '',
+          tuesday: (ctx.wizard.state.dayTimes?.tuesday || []).join(', ') || '',
+          wednesday: (ctx.wizard.state.dayTimes?.wednesday || []).join(', ') || '',
+          thursday: (ctx.wizard.state.dayTimes?.thursday || []).join(', ') || '',
+          friday: (ctx.wizard.state.dayTimes?.friday || []).join(', ') || '',
+          saturday: (ctx.wizard.state.dayTimes?.saturday || []).join(', ') || '',
+          sunday: (ctx.wizard.state.dayTimes?.sunday || []).join(', ') || '',
+        })
+      }
 
-      // console.log('Availability Save finished', currentAvailability)
+      console.log('Schedule Save finished')
     } catch (e) {
       console.log('Error', e)
     }

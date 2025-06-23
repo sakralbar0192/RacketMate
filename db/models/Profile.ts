@@ -9,11 +9,11 @@ export default sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    preferred_gender: {
+    preferred_genders: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    preferred_age: {
+    preferred_ages: {
       type: DataTypes.STRING,
       allowNull: false
     },

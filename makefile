@@ -2,7 +2,7 @@
 DOCKER_COMPOSE := docker compose
 
 # Phony-таргеты (не связаны с реальными файлами)
-.PHONY: up stop down tear-down help
+.PHONY: up stop down tear-down help reset
 
 # Таргет по умолчанию (выводит help)
 default: help
@@ -29,6 +29,24 @@ logs:
 	
 # Полная очистка
 tear-down: stop down
+
+# Сброс всех томов и приложений
+reset:
+	@echo "==> Starting reset..."
+	$(MAKE) tear-down
+	$(MAKE) clean-docker
+	$(MAKE) up-dev
+	$(MAKE) logs
+
+# Сброс докера
+clean-docker:
+	@echo "==> Removing Racketmate containers..."
+	@docker ps -a | grep racketmate | awk '{print $$1}' | xargs -r docker rm -fv || true
+	@echo "==> Removing Racketmate images..."
+	@docker images | grep "racketmate" | awk '{print $$3}' | xargs -r docker rmi -f || true
+    
+	@echo "==> Removing Racketmate volumes..."
+	@docker volume ls | grep "racketmate" | awk '{print $$2}' | xargs -r docker volume rm -f || true
 
 # Помощь
 help:

@@ -14,6 +14,14 @@ export default {
         type: Sequelize.STRING,
         allowNull: false
       },
+      gender: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      age: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false
@@ -22,14 +30,6 @@ export default {
         type: Sequelize.DATE,
         allowNull: false
       },
-      gender: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      age: {
-        type: Sequelize.STRING,
-        allowNull: false
-      }
     })
   },
   down: (queryInterface) => {

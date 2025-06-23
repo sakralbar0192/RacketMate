@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize'
 import sequelize from '../index.ts'
 
 export default sequelize.define(
-  'Availability',
+  'Schedule',
   {
     user_id: {
       type: DataTypes.INTEGER,
