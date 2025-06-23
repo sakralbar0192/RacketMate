@@ -2,28 +2,24 @@ import { DataTypes } from 'sequelize'
 import sequelize from '../index.ts'
 
 export default sequelize.define(
-  'User',
+  'Profile',
   {
-    id: {
-      type: DataTypes.NUMBER,
+    user_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
     },
-    first_name: {
+    preferred_gender: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    username: {
+    preferred_age: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    gender: {
+    play_level: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    age: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
+      allowNull: false
+    }
   }
 )

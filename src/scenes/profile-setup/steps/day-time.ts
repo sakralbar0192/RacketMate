@@ -5,7 +5,6 @@ import WeekDayService from '../service/week-day.ts'
 import type { ProfileSetupWizardContext as Context, DayTime, DayTimeAction, WeekDay } from '../types.ts'
 
 export class DayTimeStep extends BaseStep {
-  isRedraw = true
   currentDay: WeekDay | null = null
 
   defineCurrentDay(selectedDays: WeekDay[] = [], dayTimes: Record<WeekDay, DayTime[]>, reset = false) {
@@ -15,7 +14,7 @@ export class DayTimeStep extends BaseStep {
 
   async execute(ctx: Context) {
     if (!ctx.wizard.state.dayTimes) {
-      ctx.wizard.state.dayTimes = {}
+      ctx.wizard.state.dayTimes = {} as Record<WeekDay, DayTime[]>
     }
     const selectedDays: WeekDay[] = ctx.wizard.state.selectedDays || []
     const dayTimes = ctx.wizard.state.dayTimes as Record<WeekDay, DayTime[]>
@@ -62,7 +61,6 @@ export class DayTimeStep extends BaseStep {
           dayTimes[currentDay]?.push(dayTime)
         }
         ctx.wizard.state.dayTimes = dayTimes
-        this.isRedraw = true
         this.execute(ctx)
       }
     }

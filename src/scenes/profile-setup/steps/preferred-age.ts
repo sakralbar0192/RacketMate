@@ -4,7 +4,6 @@ import PreferredAgeService from '../service/prefer-age.ts'
 import type { ProfileSetupWizardContext as Context, PreferredAge, PreferredAgeAction } from '../types.ts'
 
 export class PreferredAgeStep extends BaseStep {
-  isRedraw = true
   async execute(ctx: Context) {
     if (!ctx.wizard.state.preferAges) {
       ctx.wizard.state.preferAges = []
@@ -30,7 +29,6 @@ export class PreferredAgeStep extends BaseStep {
       } else {
         ctx.wizard.state.preferAges?.push(preferredAge)
       }
-      this.isRedraw = true
       return await this.execute(ctx)
     }
   }

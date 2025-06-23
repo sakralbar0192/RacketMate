@@ -5,6 +5,8 @@ import type { ProfileSetupWizardContext as Context, PlayLevel, PlayLevelAction }
 import turnDataIntoAction from '../../../utils/turn-data-into-action.ts'
 
 export class PlayLevelStep extends BaseStep {
+  isFirstStep = true
+
   async execute(ctx: Context) {
     if (!ctx.wizard.state.level) {
       ctx.wizard.state.level = PlayLevelService.defaultLevel

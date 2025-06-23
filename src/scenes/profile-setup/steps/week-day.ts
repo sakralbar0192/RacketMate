@@ -4,7 +4,6 @@ import WeekDayService from '../service/week-day.ts'
 import type { ProfileSetupWizardContext as Context, WeekDay, WeekDayAction } from '../types.ts'
 
 export class WeekDayStep extends BaseStep {
-  isRedraw = true
   async execute(ctx: Context) {
     if (!ctx.wizard.state.selectedDays) {
       ctx.wizard.state.selectedDays = []
@@ -31,7 +30,6 @@ export class WeekDayStep extends BaseStep {
         selectedDays.push(weekDay)
       }
       ctx.wizard.state.selectedDays = selectedDays
-      this.isRedraw = true
       this.execute(ctx)
     }
   }

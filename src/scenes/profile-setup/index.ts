@@ -1,6 +1,6 @@
 import { WizardScene } from 'telegraf/scenes'
 import type { ProfileSetupWizardContext as Context, ProfileSetupActions } from './types.ts'
-import { profileSetupStepFactory } from './steps/profile-setup-step-factory.ts'
+import { profileSetupStepFactory } from './profile-setup-step-factory.ts'
 
 // Сцена настройки профиля
 export default new WizardScene<Context>(

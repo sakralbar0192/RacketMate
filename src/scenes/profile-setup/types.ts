@@ -41,7 +41,7 @@ interface WizardState {
   age?: PlayerAge;
   gender?: PlayerGender
   selectedDays?: WeekDay[];
-  dayTimes?: Record<WeekDay, DayTime[]> | object;
+  dayTimes?: Record<WeekDay, DayTime[]>
   preferAges?: PreferredAge[];
   preferGenders?: PreferredGender[]
 }

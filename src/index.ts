@@ -17,9 +17,7 @@ bot.use(stage.middleware())
 bot.command('start', async (ctx) => {
   try {
     // Проверяем сохранен ли такой пользователь в базе данных
-    let currentUser = await User.findOne({
-      where: { id: ctx.update.message.from.id }
-    })
+    let currentUser = await User.findByPk(ctx.update.message.from.id)
     if (!currentUser) {
       currentUser = await User.create({
         id: ctx.update.message.from.id,

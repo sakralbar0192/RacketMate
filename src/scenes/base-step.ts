@@ -9,9 +9,9 @@ export abstract class BaseStep {
     ctx: WizardContext<WizardSessionData>,
     action: string
   ): Promise<boolean | void>; // true = переход дальше
-  isRedraw = false
+  isFirstStep = false
   get replyMethod(): replyMethod {
-    return this.isRedraw ? 'editMessageText' : 'reply'
+    return this.isFirstStep ? 'reply' : 'editMessageText'
   }
   getDataFromAction = getDataFromAction
 }

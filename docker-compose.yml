@@ -14,6 +14,7 @@ services:
 
   db:
     image: postgres:15-alpine  # ← Alpine-образ для Linux
+    hostname: db
     platform: linux/amd64      # ← Явно указываем платформу
     environment:
       - POSTGRES_USER=dukhov

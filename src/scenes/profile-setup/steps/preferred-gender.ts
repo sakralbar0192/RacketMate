@@ -4,7 +4,6 @@ import PreferredGenderService from '../service/prefer-gender.ts'
 import type { ProfileSetupWizardContext as Context, PreferredGender, PreferredGenderAction } from '../types.ts'
 
 export class PreferredGenderStep extends BaseStep {
-  isRedraw = true
   async execute(ctx: Context) {
     if (!ctx.wizard.state.preferGenders) {
       ctx.wizard.state.preferGenders = []
@@ -30,7 +29,6 @@ export class PreferredGenderStep extends BaseStep {
       } else {
         ctx.wizard.state.preferGenders?.push(preferredGender)
       }
-      this.isRedraw = true
       return await this.execute(ctx)
     }
   }

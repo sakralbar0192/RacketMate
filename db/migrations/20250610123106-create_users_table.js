@@ -21,6 +21,14 @@ export default {
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false
+      },
+      gender: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      age: {
+        type: Sequelize.STRING,
+        allowNull: false
       }
     })
   },
