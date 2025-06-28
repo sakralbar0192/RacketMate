@@ -2,13 +2,13 @@ import Schedule from '../../../db/models/Schedule.ts'
 import Profile from '../../../db/models/Profile.ts'
 import User from '../../../db/models/User.ts'
 import { StepFactory } from '../step-factory.ts'
-import DayTimeService from './service/day-time.ts'
-import PlayLevelService from './service/play-level.ts'
-import PlayerAgeService from './service/player-age.ts'
-import PlayerGenderService from './service/player-gender.ts'
-import PreferredAgeService from './service/prefer-age.ts'
-import PreferredGenderService from './service/prefer-gender.ts'
-import WeekDayService from './service/week-day.ts'
+import DayTimeService from './services/day-time.ts'
+import PlayLevelService from './services/play-level.ts'
+import PlayerAgeService from './services/player-age.ts'
+import PlayerGenderService from './services/player-gender.ts'
+import PreferredAgeService from './services/prefer-age.ts'
+import PreferredGenderService from './services/prefer-gender.ts'
+import WeekDayService from './services/week-day.ts'
 import type { DayTime, DayTimeAction, PlayerAgeAction, PlayerGenderAction, PlayLevel, PlayLevelAction, PreferredAge, PreferredAgeAction, PreferredGender, PreferredGenderAction, ProfileSetupActions, ProfileSetupWizardContext, StepKey, WeekDay, WeekDayAction } from './types.ts'
 import { DayTimeStep } from './steps/day-time.ts'
 import { PlayLevelStep } from './steps/play-level.ts'
@@ -17,6 +17,7 @@ import { PlayerGenderStep } from './steps/player-gender.ts'
 import { PreferredAgeStep } from './steps/preferred-age.ts'
 import { PreferredGenderStep } from './steps/preferred-gender.ts'
 import { WeekDayStep } from './steps/week-day.ts'
+import { Markup } from 'telegraf'
 
 const playLevelStep = new PlayLevelStep()
 const playerAgeStep = new PlayerAgeStep()
@@ -122,13 +123,13 @@ export const profileSetupStepFactory = new StepFactory<StepKey, ProfileSetupActi
 
       if (currentSchedule) {
         await currentSchedule.update({
-          monday: ctx.wizard.state.dayTimes?.monday.join(', ') || '',
-          tuesday: ctx.wizard.state.dayTimes?.tuesday.join(', ') || '',
-          wednesday: ctx.wizard.state.dayTimes?.wednesday.join(', ') || '',
-          thursday: ctx.wizard.state.dayTimes?.thursday.join(', ') || '',
-          friday: ctx.wizard.state.dayTimes?.friday.join(', ') || '',
-          saturday: ctx.wizard.state.dayTimes?.saturday.join(', ') || '',
-          sunday: ctx.wizard.state.dayTimes?.sunday.join(', ') || '',
+          monday: ctx.wizard.state.dayTimes?.monday?.join(', ') || '',
+          tuesday: ctx.wizard.state.dayTimes?.tuesday?.join(', ') || '',
+          wednesday: ctx.wizard.state.dayTimes?.wednesday?.join(', ') || '',
+          thursday: ctx.wizard.state.dayTimes?.thursday?.join(', ') || '',
+          friday: ctx.wizard.state.dayTimes?.friday?.join(', ') || '',
+          saturday: ctx.wizard.state.dayTimes?.saturday?.join(', ') || '',
+          sunday: ctx.wizard.state.dayTimes?.sunday?.join(', ') || '',
         })
       } else {
         currentSchedule = await Schedule.create({
@@ -156,5 +157,10 @@ export const profileSetupStepFactory = new StepFactory<StepKey, ProfileSetupActi
         `Предпочтительный возраст: ${PreferredAgeService.getReadablePreferredAgeInfo(ctx.wizard.state.preferAges as PreferredAge[])}\n` +
         `Предпочтительный пол: ${PreferredGenderService.getReadablePreferredGenderInfo(ctx.wizard.state.preferGenders as PreferredGender[])}\n`
     )
+
+    await ctx.reply(
+      'Отлично, профиль настроен! Теперь вы можете искать подходящие игры!',
+      Markup.keyboard([ 'Редактировать профиль', 'Искать игры' ]).resize()
+    )    
   }
 })

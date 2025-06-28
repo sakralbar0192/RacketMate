@@ -1,6 +1,6 @@
 import { Markup } from 'telegraf'
 import { BaseStep } from '../../base-step.ts'
-import PreferredGenderService from '../service/prefer-gender.ts'
+import PreferredGenderService from '../services/prefer-gender.ts'
 import type { ProfileSetupWizardContext as Context, PreferredGender, PreferredGenderAction } from '../types.ts'
 
 export class PreferredGenderStep extends BaseStep {

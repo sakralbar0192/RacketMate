@@ -37,6 +37,9 @@ bot.command('start', async (ctx) => {
 
 // Обработка кнопки "Настроить профиль"
 bot.hears('Настроить профиль', (ctx) => ctx.scene.enter('profile-setup'))
+bot.hears('Редактировать профиль', (ctx) => ctx.scene.enter('profile-edit'))
+bot.hears('Искать игры', (ctx) => ctx.reply('ЩА'))
+
 
 // Запуск бота
 bot.launch()

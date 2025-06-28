@@ -1,7 +1,7 @@
 import { Markup } from 'telegraf'
 import { BaseStep } from '../../base-step.ts'
-import DayTimeService from '../service/day-time.ts'
-import WeekDayService from '../service/week-day.ts'
+import DayTimeService from '../services/day-time.ts'
+import WeekDayService from '../services/week-day.ts'
 import type { ProfileSetupWizardContext as Context, DayTime, DayTimeAction, WeekDay } from '../types.ts'
 
 export class DayTimeStep extends BaseStep {

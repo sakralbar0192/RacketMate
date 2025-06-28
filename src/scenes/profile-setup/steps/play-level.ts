@@ -1,6 +1,6 @@
 import { Markup } from 'telegraf'
 import { BaseStep } from '../../base-step.ts'
-import PlayLevelService from '../service/play-level.ts'
+import PlayLevelService from '../services/play-level.ts'
 import type { ProfileSetupWizardContext as Context, PlayLevel, PlayLevelAction } from '../types.ts'
 import turnDataIntoAction from '../../../utils/turn-data-into-action.ts'
 

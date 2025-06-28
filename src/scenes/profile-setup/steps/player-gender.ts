@@ -2,7 +2,7 @@ import { Markup } from 'telegraf'
 import { BaseStep } from '../../base-step.ts'
 import type { ProfileSetupWizardContext as Context, PlayerGender, PlayerGenderAction } from '../types.ts'
 import turnDataIntoAction from '../../../utils/turn-data-into-action.ts'
-import PlayerGenderService from '../service/player-gender.ts'
+import PlayerGenderService from '../services/player-gender.ts'
 
 export class PlayerGenderStep extends BaseStep {
   async execute(ctx: Context) {
