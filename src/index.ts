@@ -2,11 +2,22 @@ import { Markup, Scenes, session, Telegraf } from 'telegraf'
 import profileSetup from './scenes/profile-setup/index.ts'
 import { type botContext } from './types/context.ts'
 import User from '../db/models/User.ts'
+import { config } from 'dotenv';
+
+config(); // Загружает .env в process.env
+
+// Проверка, что переменные существуют
+const botToken = process.env.BOT_TOKEN;
+if (!botToken) {
+  throw new Error('BOT_TOKEN не указан в .env!');
+}
+
+console.log('Bot ready with token:', botToken.slice(0, 5) + '...'); // Частичный вывод для безопасности
 
 //TODO Реализовать /help
 // bot.help((ctx) => ctx.reply('Send me a sticker'))
 
-const bot = new Telegraf<botContext>('7986827251:AAF0HnS8eDolSIzlz-19GJs5MzYIlSOh008')
+const bot = new Telegraf<botContext>(botToken)
 
 // Настройка сцен
 const stage = new Scenes.Stage([ profileSetup ])
@@ -38,7 +49,7 @@ bot.command('start', async (ctx) => {
 // Обработка кнопки "Настроить профиль"
 bot.hears('Настроить профиль', (ctx) => ctx.scene.enter('profile-setup'))
 bot.hears('Редактировать профиль', (ctx) => ctx.scene.enter('profile-edit'))
-bot.hears('Искать игры', (ctx) => ctx.reply('ЩА'))
+bot.hears('Искать игры', (ctx) => ctx.reply('ПОИСК...'))
 
 
 // Запуск бота

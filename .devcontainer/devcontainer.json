@@ -1,0 +1,22 @@
+{
+  "name": "Bun.js & PostgreSQL Dev Container",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "bot-dev",
+  "workspaceFolder": "/app",
+  
+  "remoteUser": "root",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers-contrib/features/bun:1": {}
+  },
+  
+  "postCreateCommand": "git config --global --add safe.directory /app && bun install",
+  
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "git.path": "/usr/bin/git"
+      }
+    }
+  }
+}

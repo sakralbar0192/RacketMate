@@ -1,25 +1,26 @@
 services:
-  bot:
-    platform: linux/amd64  # ← Важно для кросс-платформенной сборки
-    build: .
-    command: sh -c "sleep 5 && bun run db:migrate && bun run dev"
-    volumes:
-      - .:/app
+  bot-prod:
+    profiles: ["prod"]
+    build:
+      context: .
+      target: prod  # ← Этап для production
+    command: bun run start
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
-      - DATABASE_URL=postgres://dukhov:dukhov@db:5432/racket_mate
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
-      - db
+      - db-prod
     restart: unless-stopped
 
-  db:
+  db-prod:
+    profiles: ["prod"]
     image: postgres:15-alpine  # ← Alpine-образ для Linux
-    hostname: db
+    hostname: db-prod
     platform: linux/amd64      # ← Явно указываем платформу
     environment:
-      - POSTGRES_USER=dukhov
-      - POSTGRES_PASSWORD=dukhov
-      - POSTGRES_DB=racket_mate
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
     - 5434:5432
     volumes:
@@ -27,7 +28,44 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/00-init.sql
       - ./db/create-user.sql:/docker-entrypoint-initdb.d/01-create-user.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  bot-dev:
+    profiles: ["dev"]
+    platform: linux/amd64  # ← Важно для кросс-платформенной сборки
+    build: .
+    command: sh -c "sleep 5 && bun run db:migrate && bun run dev"
+    volumes:
+      - .:/app
+      - node_modules_data:/app/node_modules
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - db-dev
+    restart: unless-stopped
+
+  db-dev:
+    profiles: ["dev"]
+    image: postgres:15-alpine  # ← Alpine-образ для Linux
+    hostname: db-dev
+    platform: linux/amd64      # ← Явно указываем платформу
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+    - 5435:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/00-init.sql
+      - ./db/create-user.sql:/docker-entrypoint-initdb.d/01-create-user.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -36,3 +74,4 @@ services:
 # Том для хранения данных PostgreSQL
 volumes:
   postgres_data:
+  node_modules_data:

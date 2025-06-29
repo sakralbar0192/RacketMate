@@ -1,6 +1,15 @@
 import { Sequelize } from 'sequelize'
+import { config } from 'dotenv';
 
-const sequelize = new Sequelize('postgres://dukhov:dukhov@db:5432/racket_mate')
+config(); // Загружает .env в process.env
+
+// Проверка, что переменные существуют
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL не указан в .env!');
+}
+
+const sequelize = new Sequelize(databaseUrl)
 
 try {
   await sequelize.authenticate()

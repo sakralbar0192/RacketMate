@@ -2,15 +2,24 @@
 DOCKER_COMPOSE := docker compose
 
 # Phony-таргеты (не связаны с реальными файлами)
-.PHONY: up stop down tear-down help reset
+.PHONY: up dev stop down tear-down help reset dev-no-cache
 
 # Таргет по умолчанию (выводит help)
 default: help
 
-# Запуск контейнеров
-up-dev:
+# Запуск контейнеров в режиме разработки
+dev:
 	@echo "==> Building and starting docker containers..."
-	$(DOCKER_COMPOSE) up -d --build
+	$(DOCKER_COMPOSE) --profile dev up --build
+
+dev-no-cache:
+	@echo "==> Building and starting docker containers..."
+	$(DOCKER_COMPOSE) --profile dev up --build --force-recreate
+
+# Запуск контейнеров в режиме деплоя
+up:
+	@echo "==> Building and starting docker containers..."
+	$(DOCKER_COMPOSE) --profile prod up --build -d
 
 # Остановка контейнеров
 stop:
@@ -25,7 +34,7 @@ down:
 # Показать логи
 logs:
 	@echo "==> Starting logs..."
-	$(DOCKER_COMPOSE) logs -f bot
+	$(DOCKER_COMPOSE) logs -f bot-dev
 	
 # Полная очистка
 tear-down: stop down
@@ -35,7 +44,7 @@ reset:
 	@echo "==> Starting reset..."
 	$(MAKE) tear-down
 	$(MAKE) clean-docker
-	$(MAKE) up-dev
+	$(MAKE) dev-no-cache
 	$(MAKE) logs
 
 # Сброс докера

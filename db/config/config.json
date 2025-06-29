@@ -3,7 +3,7 @@
     "username": "dukhov",
     "password": "dukhov",
     "database": "racket_mate",
-    "host": "db",
+    "host": "db-dev",
     "port": 5432,
     "dialect": "postgres"
   },
