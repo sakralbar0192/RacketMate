@@ -24,12 +24,14 @@ up:
 # Остановка контейнеров
 stop:
 	@echo "==> Stopping docker containers..."
-	$(DOCKER_COMPOSE) stop
+	$(DOCKER_COMPOSE) --profile dev stop
+	$(DOCKER_COMPOSE) --profile prod stop
 
 # Удаление контейнеров
 down:
 	@echo "==> Removing docker containers..."
-	$(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) --profile dev down
+	$(DOCKER_COMPOSE) --profile prod down
 
 # Показать логи
 logs:
