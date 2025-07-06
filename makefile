@@ -59,6 +59,10 @@ clean-docker:
 	@echo "==> Removing Racketmate volumes..."
 	@docker volume ls | grep "racketmate" | awk '{print $$2}' | xargs -r docker volume rm -f || true
 
+exec:
+	$(DOCKER_COMPOSE) exec -it bot-dev /bin/sh
+
+	
 # Помощь
 help:
 	@echo "Usage: make <target>"
